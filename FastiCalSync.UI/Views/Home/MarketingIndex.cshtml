@@ -1,0 +1,18 @@
+﻿@{
+  ViewData["Title"] = "iCal that's current";
+}
+
+<div class="jumbotron">
+  <h1>iCal that's current</h1>
+  <p class="lead">
+    Calendar events are time-sensitive.
+    Don't wait up to 24 hours for Google Calendar to sync your iCal feed.
+    We'll do it every minute so your calendar always stays up to date.
+  </p>
+
+  <form method="post" asp-controller="Manage" asp-action="Url">
+    <input class="input-lg form-control" type="text" name="Url" placeholder="https://example.com/calendar.ics"
+           style="height: 60px; padding-right: 101px; margin-right: -101px; display: inline-block; vertical-align: middle;" />
+    <button type="submit" class="btn btn-lg btn-success" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Sync</button>
+  </form>
+</div>
