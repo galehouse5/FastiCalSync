@@ -7,8 +7,9 @@
 <div class="row marketing">
   <div class="well">
     <form method="post" asp-action="Create">
-      <input class=" form-control" type="text" name="Url" placeholder="https://example.com/calendar.ics" asp-action="Create"
-             style="padding-right: 62px; margin-right: -62px; display: inline-block; vertical-align: middle;" />
+      <input class=" form-control" type="text" name="Url" asp-action="Create"
+             style="padding-right: 62px; margin-right: -62px; display: inline-block; vertical-align: middle;"
+             placeholder="https://example.com/calendar.ics" required pattern="https?://.+" />
       <button type="submit" class="btn btn-success" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Sync</button>
     </form>
   </div>

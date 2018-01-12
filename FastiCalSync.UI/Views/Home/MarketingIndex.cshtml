@@ -11,8 +11,9 @@
   </p>
 
   <form method="post" asp-controller="Manage" asp-action="Url">
-    <input class="input-lg form-control" type="text" name="Url" placeholder="https://example.com/calendar.ics"
-           style="height: 60px; padding-right: 101px; margin-right: -101px; display: inline-block; vertical-align: middle;" />
+    <input class="input-lg form-control" type="text" name="Url"
+           style="height: 60px; padding-right: 101px; margin-right: -101px; display: inline-block; vertical-align: middle;"
+           placeholder="https://example.com/calendar.ics" required pattern="https?://.+" />
     <button type="submit" class="btn btn-lg btn-success" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Sync</button>
   </form>
 </div>

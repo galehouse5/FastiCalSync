@@ -22,15 +22,15 @@ namespace FastiCalSync.UI.Controllers
         [HttpPost(""), ValidateAntiForgeryToken, AllowAnonymous]
         public async Task<IActionResult> Create(string url)
         {
+            // Is the URL valid?
+            if (!Uri.TryCreate(url ?? string.Empty, UriKind.Absolute, out Uri _))
+                return await Index();
+
             if (!User.Identity.IsAuthenticated)
             {
                 Response.Cookies.Append("deferred-create-url", url);
                 return RedirectToAction("SignIn", "Auth");
             }
-
-            // Is the URL valid?
-            if (!Uri.TryCreate(url ?? string.Empty, UriKind.Absolute, out Uri _))
-                return await Index();
 
             Calendar calendar = new Calendar(User.Identity.Name, url);
             await repository.Create(calendar);

@@ -1,22 +1,14 @@
-﻿(function (document) {
-  var tableContainer = document.getElementById("table-container");
-  if (!tableContainer) return;
+﻿(function ($) {
+  var $tableContainer = $("#table-container");
+  if ($tableContainer.length === 0) return;
 
   var refreshTable = function () {
-    var request = new XMLHttpRequest();
-    request.open("GET", "", true);
-    request.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-
-    request.onload = function () {
-      if (request.status !== 200) return;
-
-      tableContainer.innerHTML = request.responseText;
-    };
-
-    request.send();
+    $.get('', function (data) {
+      tableContainer.html(data);
+    });
 
     setTimeout(refreshTable, 10 * 1000);
   };
 
   setTimeout(refreshTable, 10 * 1000);
-})(document);
+})(jQuery);
