@@ -4,6 +4,7 @@ using FastiCalSync.UI.Data;
 using FastiCalSync.UI.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,7 +32,10 @@ namespace FastiCalSync.UI
             // Add application services.
             services.AddScoped(p => new CalendarRepository(Configuration.GetSection("ConnectionStrings:AzureStorage").Value));
 
-            services.AddMvc();
+            services.AddMvc(o =>
+            {
+                o.Filters.Add(new RequireHttpsAttribute());
+            });
 
             services
                 .AddAuthentication()
