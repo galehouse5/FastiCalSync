@@ -4,7 +4,7 @@
 
   var refreshTable = function () {
     $.get('', function (data) {
-      tableContainer.html(data);
+      $tableContainer.html(data);
     });
 
     setTimeout(refreshTable, 10 * 1000);
