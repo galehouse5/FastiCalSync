@@ -1,4 +1,5 @@
 ﻿using FastiCalSync.Data;
+using FastiCalSync.UI.Extensions;
 using FastiCalSync.UI.Models.HomeViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -79,7 +80,8 @@ namespace FastiCalSync.UI.Controllers
                 .OrderByDescending(m => m.CreatedTimestampUtc)
                 .Select(CalendarViewModel.Create)
                 .ToArray();
-            return View("Index", model);
+            return Request.IsAjaxRequest() ? PartialView("_IndexTable", model)
+                : (IActionResult)View("Index", model);
         }
     }
 }

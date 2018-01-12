@@ -1,13 +1,7 @@
 ﻿@model IReadOnlyCollection<CalendarViewModel>
 
 @{
-  ViewData["Title"] = "My iCals";
-}
-
-@section Scripts {
-  <script>
-    setTimeout(function () { window.location.reload(); }, 30 * 1000);
-  </script>
+  ViewData["Title"] = "My Calendars";
 }
 
 <div class="row marketing">
@@ -19,66 +13,7 @@
     </form>
   </div>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>URL</th>
-        <th>State</th>
-        <th>Last Sync</th>
-        <th style="width: 85px;"></th>
-      </tr>
-    </thead>
-  
-    <tbody>
-      @if (!Model.Any())
-      {
-        <tr class="text-center">
-          <td colspan="5" scope="row">Your calendars will appear here. Just enter a URL in the input above to get started!</td>
-        </tr>
-      }
-  
-      @foreach (CalendarViewModel calendar in Model)
-      {
-        <tr>
-          <th scope="row" title="@calendar.LongUrl">@calendar.ShortUrl</th>
-          <td>
-            @calendar.PrimaryState
-            @if (calendar.SecondaryState != null )
-            {
-              <span class="text-muted">(@calendar.SecondaryState)</span>
-            }
-          </td>
-          <td title="@(calendar.LastSyncTimestampUtc.HasValue ? $"{calendar.LastSyncTimestampUtc:s} UTC" : null)">
-            @(calendar.LastSyncTimeAgo.HasValue ? $"{calendar.LastSyncTimeAgo?.FormatDuration()} ago" : "-")
-          </td>
-          <td>
-            <form method="post" asp-action="Update" asp-route-rowkey="@calendar.RowKey">
-              <div class="btn-group" role="group">
-                @if (calendar.CanStart)
-                {
-                  <button type="submit" class="btn btn-sm btn-link" name="State" value="@SyncState.Syncing">
-                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                  </button>
-                }
-  
-                @if (calendar.CanPause)
-                {
-                  <button type="submit" class="btn btn-sm btn-link" name="State" value="@SyncState.PausedByUser">
-                    <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
-                  </button>
-                }
-  
-                @if (calendar.CanDelete)
-                {
-                  <button type="submit" class="btn btn-sm btn-link" name="State" value="@SyncState.Deleting">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                  </button>
-                }
-              </div>
-            </form>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+  <div id="table-container">
+    @Html.Partial("_IndexTable")
+  </div>
 </div>
