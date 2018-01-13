@@ -63,8 +63,11 @@ namespace FastiCalSync.Functions
 
             if (calendar.SyncState == SyncState.Deleting)
             {
-                log.Info("Deleting Google calendar...");
-                await gCalService.DeleteCalendar(calendar.GoogleCalendarID);
+                if (calendar.GoogleCalendarID != null)
+                {
+                    log.Info("Deleting Google calendar...");
+                    await gCalService.DeleteCalendar(calendar.GoogleCalendarID);
+                }
 
                 log.Info("Deleting calendar record...");
                 await calendarRepository.Delete(calendar);

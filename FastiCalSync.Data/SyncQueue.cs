@@ -1,6 +1,5 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
-using Microsoft.WindowsAzure.Storage.RetryPolicies;
 using System;
 using System.Threading.Tasks;
 
@@ -12,7 +11,7 @@ namespace FastiCalSync.Data
 
         public SyncQueue(string connectionString)
         {
-            this.client = CloudStorageAccount.Parse(connectionString).CreateCloudQueueClient();
+            client = CloudStorageAccount.Parse(connectionString).CreateCloudQueueClient();
         }
 
         public async Task Enqueue(SyncJob job)
@@ -22,7 +21,7 @@ namespace FastiCalSync.Data
             await queue.AddMessageAsync(message,
                 timeToLive: TimeSpan.FromSeconds(60),
                 initialVisibilityDelay: TimeSpan.Zero,
-                options: new QueueRequestOptions { RetryPolicy = new NoRetry() },
+                options: null,
                 operationContext: null);
         }
     }
