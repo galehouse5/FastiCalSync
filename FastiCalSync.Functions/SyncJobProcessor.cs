@@ -37,59 +37,59 @@ namespace FastiCalSync.Functions
             log.Info($"Reading calendar {job.CalendarID} for {job.UserName}...");
             Calendar calendar = await calendarRepository.Read(job.UserName, job.CalendarID);
 
-            if (calendar.SyncState == SyncState.PausedByError
-                || calendar.SyncState == SyncState.PausedByUser)
+            try
             {
-                log.Info($"Syncing is paused, exiting...");
-                return;
-            }
+                log.Info($"Reading Google token for {job.UserName}...");
+                Token token = await tokenRepository.Read(job.UserName);
 
-            log.Info($"Reading Google token for {job.UserName}...");
-            Token token = await tokenRepository.Read(job.UserName);
+                log.Info($"Refreshing Google token if needed...");
+                UserCredential credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    new ClientSecrets
+                    {
+                        ClientId = GoogleClientID,
+                        ClientSecret = GoogleClientSecret
+                    },
+                    new[] { CalendarService.Scope.Calendar },
+                    "user",
+                    CancellationToken.None,
+                    new TokenDataStore(token, tokenRepository));
 
-            log.Info($"Refreshing Google token if needed...");
-            UserCredential credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                new ClientSecrets
+                GCalService gCalService = new GCalService(credential);
+
+                if (calendar.SyncState == SyncState.Deleting)
                 {
-                    ClientId = GoogleClientID,
-                    ClientSecret = GoogleClientSecret
-                },
-                new[] { CalendarService.Scope.Calendar },
-                "user",
-                CancellationToken.None,
-                new TokenDataStore(token, tokenRepository));
+                    if (calendar.GoogleCalendarID != null)
+                    {
+                        log.Info("Deleting Google calendar...");
+                        await gCalService.DeleteCalendar(calendar.GoogleCalendarID);
+                    }
 
-            GCalService gCalService = new GCalService(credential);
-
-            if (calendar.SyncState == SyncState.Deleting)
-            {
-                if (calendar.GoogleCalendarID != null)
-                {
-                    log.Info("Deleting Google calendar...");
-                    await gCalService.DeleteCalendar(calendar.GoogleCalendarID);
+                    log.Info("Deleting calendar record...");
+                    await calendarRepository.Delete(calendar);
                 }
+                else if (calendar.SyncState == SyncState.Syncing)
+                {
+                    iCalService iCalService = new iCalService();
+                    GCalEventSyncer eventSyncer = new GCalEventSyncer(iCalService, gCalService);
+                    CalendarSyncer syncer = new CalendarSyncer(
+                        gCalService, eventSyncer, iCalService, calendarRepository,
+                        logger: m => log.Info(m));
 
-                log.Info("Deleting calendar record...");
-                await calendarRepository.Delete(calendar);
+                    log.Info("Syncing calendar...");
+                    await syncer.Execute(calendar, eventLimit: MaxSyncOperationsPerJob);
 
-                return;
+                    log.Info("Saving calendar record...");
+                    calendar.RecordJobSuccess();
+                    await calendarRepository.Update(calendar);
+                }
+                else throw new NotSupportedException($"Unable to process calendar in '{calendar.SyncState}' state.");
             }
-
-            if (calendar.SyncState == SyncState.Syncing)
+            catch (Exception ex)
             {
-                iCalService iCalService = new iCalService();
-                GCalEventSyncer eventSyncer = new GCalEventSyncer(iCalService, gCalService);
-                CalendarSyncer syncer = new CalendarSyncer(
-                    gCalService, eventSyncer, iCalService, calendarRepository,
-                    logger: m => log.Info(m));
-
-                log.Info("Syncing calendar...");
-                await syncer.Execute(calendar, eventLimit: MaxSyncOperationsPerJob);
-
-                return;
+                log.Info("Logging error...");
+                calendar.RecordJobError(ex);
+                await calendarRepository.Update(calendar);
             }
-
-            throw new NotSupportedException();
         }
     }
 }

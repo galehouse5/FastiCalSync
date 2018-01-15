@@ -1,0 +1,83 @@
+﻿@model CalendarViewModel
+
+<tr>
+  <th scope="row">
+    <span title="@Model.LongUrl">@Model.ShortUrl</span>
+
+    @if (Model.SourceEventCount.HasValue)
+    {
+      <br />
+
+      <small class="text-muted">
+        @Model.SourceEventCount?.ToString("n0") events
+
+        @if (Model.OutOfSyncEventCount == 0)
+        {
+          @:(all in sync)
+        }
+        else if (Model.OutOfSyncEventCount.HasValue)
+        {
+          @:(@Model.OutOfSyncEventCount?.ToString("n0") out of sync)
+        }
+      </small>
+    }
+  </th>
+
+  <td>
+    @(Model.HasError ? $"{Model.SyncState}, Error" : $"{Model.SyncState}")
+
+    @if (Model.RetryTimeUtc.HasValue)
+    {
+      <br />
+
+      <small class="text-muted" title="@Model.RetryTimeUtc?.ToString("s") UTC">
+        @if (Model.RetryTimeUtc < DateTime.UtcNow)
+        {
+          @:Retrying soon
+        }
+        else
+        {
+          @:Retrying in @Model.TimeUntilRetry?.FormatDuration()
+        }
+      </small>
+    }
+  </td>
+
+  @if (Model.LastProcessTimestampUtc.HasValue)
+  {
+    <td title="@Model.LastProcessTimestampUtc?.ToString("s") UTC">
+      @Model.TimeSinceLastProcess?.FormatDuration() ago
+    </td>
+  }
+  else
+  {
+    <td>-</td>
+  }
+
+  <td>
+    <form method="post" asp-action="Update" asp-route-rowkey="@Model.RowKey">
+      <div class="btn-group" role="group">
+        @if (Model.CanStart)
+        {
+          <button type="submit" class="btn btn-sm btn-link" name="State" value="@SyncState.Syncing">
+            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+          </button>
+        }
+
+        @if (Model.CanPause)
+        {
+          <button type="submit" class="btn btn-sm btn-link" name="State" value="@SyncState.Paused">
+            <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+          </button>
+        }
+
+        @if (Model.CanDelete)
+        {
+          <button type="submit" class="btn btn-sm btn-link" name="State" value="@SyncState.Deleting">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </button>
+        }
+      </div>
+    </form>
+  </td>
+</tr>

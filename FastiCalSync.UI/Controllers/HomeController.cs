@@ -45,11 +45,12 @@ namespace FastiCalSync.UI.Controllers
             if (calendar == null)
                 return RedirectToAction("Index");
 
-            calendar.SyncState = state ?? calendar.SyncState;
-
-            if (state == SyncState.PausedByUser)
+            switch (state)
             {
-                calendar.LastPauseTimestampUtc = DateTime.UtcNow;
+                case SyncState.Syncing: calendar.Sync(); break;
+                case SyncState.Deleting: calendar.Delete(); break;
+                case SyncState.Paused: calendar.Pause(); break;
+                default: throw new NotSupportedException();
             }
 
             await repository.Update(calendar);

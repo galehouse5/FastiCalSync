@@ -21,7 +21,7 @@ namespace FastiCalSync.Functions
             var queue = new SyncQueue(AzureWebJobsStorage);
 
             log.Info("Reading unpaused calendars...");
-            var calendars = await repository.ReadWhereUnpaused();
+            var calendars = await repository.ReadForProcessing();
 
             log.Info($"Queueing sync jobs for {calendars.Count():n0} calendars...");
             Task.WaitAll(calendars

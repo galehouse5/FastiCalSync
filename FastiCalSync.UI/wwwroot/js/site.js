@@ -7,8 +7,8 @@
       $tableContainer.html(data);
     });
 
-    setTimeout(refreshTable, 10 * 1000);
+    setTimeout(refreshTable, 9 * 1000);
   };
 
-  setTimeout(refreshTable, 10 * 1000);
+  setTimeout(refreshTable, 9 * 1000);
 })(jQuery);

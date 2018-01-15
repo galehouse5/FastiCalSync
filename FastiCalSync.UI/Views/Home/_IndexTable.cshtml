@@ -3,7 +3,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>URL</th>
+      <th>Calendar</th>
       <th>State</th>
       <th>Last Sync</th>
       <th style="width: 85px;"></th>
@@ -18,47 +18,9 @@
       </tr>
     }
 
-    @foreach (CalendarViewModel calendar in Model)
+    @foreach (CalendarViewModel row in Model)
     {
-      <tr>
-        <th scope="row" title="@calendar.LongUrl">@calendar.ShortUrl</th>
-        <td>
-          @calendar.PrimaryState
-          @if (calendar.SecondaryState != null )
-          {
-            <span class="text-muted">(@calendar.SecondaryState)</span>
-          }
-        </td>
-        <td title="@(calendar.LastSyncTimestampUtc.HasValue ? $"{calendar.LastSyncTimestampUtc:s} UTC" : null)">
-          @(calendar.LastSyncTimeAgo.HasValue ? $"{calendar.LastSyncTimeAgo?.FormatDuration()} ago" : "-")
-        </td>
-        <td>
-          <form method="post" asp-action="Update" asp-route-rowkey="@calendar.RowKey">
-            <div class="btn-group" role="group">
-              @if (calendar.CanStart)
-              {
-                <button type="submit" class="btn btn-sm btn-link" name="State" value="@SyncState.Syncing">
-                  <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                </button>
-              }
-
-              @if (calendar.CanPause)
-              {
-                <button type="submit" class="btn btn-sm btn-link" name="State" value="@SyncState.PausedByUser">
-                  <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
-                </button>
-              }
-
-              @if (calendar.CanDelete)
-              {
-                <button type="submit" class="btn btn-sm btn-link" name="State" value="@SyncState.Deleting">
-                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </button>
-              }
-            </div>
-          </form>
-        </td>
-      </tr>
+      @Html.Partial("_IndexRow", row)
     }
   </tbody>
 </table>

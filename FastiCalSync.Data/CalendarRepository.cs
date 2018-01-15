@@ -29,14 +29,14 @@ namespace FastiCalSync.Data
             return (await table.ExecuteQueryAsync(query)).ToArray();
         }
 
-        public async Task<IReadOnlyCollection<Calendar>> ReadWhereUnpaused()
+        public async Task<IReadOnlyCollection<Calendar>> ReadForProcessing()
         {
             CloudTable table = client.GetTableReference("Calendars");
             var query = new TableQuery<Calendar>()
                 .Where(TableQuery.CombineFilters(
-                    TableQuery.GenerateFilterConditionForInt("InternalSyncState", QueryComparisons.NotEqual, (int)SyncState.PausedByError),
-                    TableOperators.And,
-                    TableQuery.GenerateFilterConditionForInt("InternalSyncState", QueryComparisons.NotEqual, (int)SyncState.PausedByUser)));
+                    TableQuery.GenerateFilterConditionForInt("InternalSyncState", QueryComparisons.Equal, (int)SyncState.Syncing),
+                    TableOperators.Or,
+                    TableQuery.GenerateFilterConditionForInt("InternalSyncState", QueryComparisons.Equal, (int)SyncState.Deleting)));
             return (await table.ExecuteQueryAsync(query)).ToArray();
         }
 
