@@ -1,5 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,7 +38,9 @@ namespace FastiCalSync.Data
                     TableQuery.GenerateFilterConditionForInt("InternalSyncState", QueryComparisons.Equal, (int)SyncState.Syncing),
                     TableOperators.Or,
                     TableQuery.GenerateFilterConditionForInt("InternalSyncState", QueryComparisons.Equal, (int)SyncState.Deleting)));
-            return (await table.ExecuteQueryAsync(query)).ToArray();
+            return (await table.ExecuteQueryAsync(query))
+                .Where(c => DateTime.UtcNow >= (c.DontRetryJobUntilTimeUtc ?? DateTime.MinValue))
+                .ToArray();
         }
 
         public async Task<Calendar> Read(string userName, string calendarID)
