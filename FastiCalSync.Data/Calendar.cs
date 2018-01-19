@@ -57,10 +57,15 @@ namespace FastiCalSync.Data
         public string LastErrorStackTrace { get; set; }
         public int? JobRetryCount { get; set; }
         public DateTime? DontRetryJobUntilTimeUtc { get; set; }
+        public int? iCalendarEventCount { get; set; }
+
+        public int? ProcessSuccessCount { get; set; }
+        public int? ProcessErrorCount { get; set; }
+        public int? ProcessAttemptCount
+            => ProcessSuccessCount + ProcessErrorCount
+            ?? ProcessAttemptCount ?? ProcessErrorCount;
 
         #region Sync count properties
-
-        public int? LastSyncSourceEventCount { get; set; }
 
         public int? LastSyncCreateCount { get; set; }
         public int? LastSyncUpdateCount { get; set; }
@@ -120,6 +125,7 @@ namespace FastiCalSync.Data
         public void RecordJobSuccess()
         {
             LastProcessTimestampUtc = DateTime.UtcNow;
+            ProcessSuccessCount = (ProcessSuccessCount ?? 0) + 1;
             JobRetryCount = null;
             DontRetryJobUntilTimeUtc = null;
         }
@@ -131,7 +137,7 @@ namespace FastiCalSync.Data
             LastErrorStackTrace = ex.StackTrace;
 
             LastProcessTimestampUtc = DateTime.UtcNow;
-
+            ProcessErrorCount = (ProcessErrorCount ?? 0) + 1;
             JobRetryCount = (JobRetryCount + 1) ?? 0;
             DontRetryJobUntilTimeUtc = DateTime.UtcNow
                 + TimeSpan.FromMinutes(Math.Pow(2, JobRetryCount.Value));

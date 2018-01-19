@@ -52,7 +52,7 @@ namespace FastiCalSync.Functions
 
             logger("Reading iCal data...");
             var iCal = await iCalService.Read(new Uri(calendar.iCalendarUrl));
-            calendar.LastSyncSourceEventCount = iCal.Events.Count;
+            calendar.iCalendarEventCount = iCal.Events.Count;
 
             logger("Determining events to sync...");
             var events = await gCalEventSyncer.GetEventSyncOperations(calendar.GoogleCalendarID, iCal);

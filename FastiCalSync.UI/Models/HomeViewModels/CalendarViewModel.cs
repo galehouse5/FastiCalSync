@@ -8,7 +8,7 @@ namespace FastiCalSync.UI.Models.HomeViewModels
         public string RowKey { get; set; }
         public string LongUrl { get; set; }
         public string ShortUrl { get; set; }
-        public int? SourceEventCount { get; set; }
+        public int? TotalEventCount { get; set; }
         public int? OutOfSyncEventCount { get; set; }
         public SyncState SyncState { get; set; }
         public bool HasError { get; set; }
@@ -30,7 +30,7 @@ namespace FastiCalSync.UI.Models.HomeViewModels
                 RowKey = calendar.RowKey,
                 LongUrl = longUrl,
                 ShortUrl = shortUrl,
-                SourceEventCount = calendar.LastSyncSourceEventCount,
+                TotalEventCount = calendar.iCalendarEventCount,
                 OutOfSyncEventCount = calendar.LastSyncRemainingOperationCount,
                 SyncState = calendar.SyncState,
                 HasError = calendar.JobRetryCount.HasValue,

@@ -4,12 +4,12 @@
   <th scope="row">
     <span title="@Model.LongUrl">@Model.ShortUrl</span>
 
-    @if (Model.SourceEventCount.HasValue)
+    @if (Model.TotalEventCount.HasValue)
     {
       <br />
 
       <small class="text-muted">
-        @Model.SourceEventCount?.ToString("n0") events
+        @Model.TotalEventCount?.ToString("n0") events
 
         @if (Model.OutOfSyncEventCount == 0)
         {
