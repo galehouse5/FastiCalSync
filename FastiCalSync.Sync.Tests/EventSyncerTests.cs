@@ -37,7 +37,7 @@ namespace FastiCalSync.Sync.Tests
                 new FileDataStore(credentialPath, true));
 
             gCalService = new GCalService(credential);
-            gCalEventSyncer = new GCalEventSyncer(iCalService, gCalService);
+            gCalEventSyncer = new GCalEventSyncer(gCalService);
         }
 
         [TestMethod]

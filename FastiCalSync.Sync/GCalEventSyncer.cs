@@ -9,14 +9,10 @@ namespace FastiCalSync.Sync
 {
     public class GCalEventSyncer
     {
-        private iCalService iCalService;
-        private GCalService gCalService;
+        private readonly GCalService gCalService;
 
-        public GCalEventSyncer(
-            iCalService iCalService,
-            GCalService gCalService)
+        public GCalEventSyncer(GCalService gCalService)
         {
-            this.iCalService = iCalService;
             this.gCalService = gCalService;
         }
 

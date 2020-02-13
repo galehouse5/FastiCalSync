@@ -70,7 +70,7 @@ namespace FastiCalSync.Functions
                 else if (calendar.SyncState == SyncState.Syncing)
                 {
                     iCalService iCalService = new iCalService();
-                    GCalEventSyncer eventSyncer = new GCalEventSyncer(iCalService, gCalService);
+                    GCalEventSyncer eventSyncer = new GCalEventSyncer(gCalService);
                     CalendarSyncer syncer = new CalendarSyncer(
                         gCalService, eventSyncer, iCalService, calendarRepository,
                         logger: m => log.Info(m));
