@@ -84,5 +84,8 @@ namespace FastiCalSync.UI.Controllers
             return Request.IsAjaxRequest() ? PartialView("_IndexTable", model)
                 : (IActionResult)View("Index", model);
         }
+
+        [HttpGet("privacy-policy"), AllowAnonymous]
+        public IActionResult PrivacyPolicy() => View("PrivacyPolicy");
     }
 }

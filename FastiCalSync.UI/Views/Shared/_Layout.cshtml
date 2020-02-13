@@ -20,35 +20,45 @@
 <body>
   <div class="container">
     <div class="header clearfix">
-      <nav>
-        <ul class="nav nav-pills pull-right">
-          @if (User.Identity.IsAuthenticated)
-          {
-            <li role="presentation">
-              <form method="post" asp-action="SignOut" asp-controller="Auth">
-                <button class="btn btn-link" style="padding: 10px 15px;">Sign Out</button>
-              </form>
-            </li>
-          }
-          else
-          {
-            <li role="presentation">
-              <a asp-action="SignIn" asp-controller="Auth">Sign In</a>
-            </li>
-          }
-        </ul>
-      </nav>
+      @if (!true.Equals(ViewData["HideHeaderNav"]))
+      {
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            @if (User.Identity.IsAuthenticated)
+            {
+              <li role="presentation">
+                <form method="post" asp-action="SignOut" asp-controller="Auth">
+                  <button class="btn btn-link" style="padding: 10px 15px;">Sign Out</button>
+                </form>
+              </li>
+            }
+            else
+            {
+              <li role="presentation">
+                <a asp-action="SignIn" asp-controller="Auth">Sign In</a>
+              </li>
+            }
+          </ul>
+        </nav>
+      }
 
-      <h3 class="text-muted">
-        Fast iCal Sync <small>for Google Calendar</small>
+      <h3>
+        <a href="~/">Fast iCal Sync <small>for Google Calendar</small></a>
       </h3>
     </div>
 
     @RenderBody()
-
-    @*<footer class="footer">
-      <p>© @DateTime.Today.Year Company, Inc.</p>
-    </footer>*@
+    
+    @if (!true.Equals(ViewData["HideFooter"]))
+    {
+      <footer class="footer">
+        <p>
+          <a asp-action="PrivacyPolicy" asp-controller="Home">Privacy Policy</a>
+          •
+          <a href="https://github.com/galehouse5/FastiCalSync" rel="nofollow">Source Code</a>
+        </p>
+      </footer>
+    }
   </div>
 
   <environment include="Development">

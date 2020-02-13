@@ -24,6 +24,11 @@ body {
     line-height: 40px;
   }
 
+    .header h3 a {
+      text-decoration: none;
+      color: #777;
+    }
+
 /* Custom page footer */
 .footer {
   padding-top: 19px;
