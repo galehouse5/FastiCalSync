@@ -6,8 +6,8 @@
   <h1>iCal that's current</h1>
   <p class="lead">
     Calendar events are time-sensitive.
-    Don't wait up to 24 hours for Google Calendar to sync your iCal feed.
-    We'll do it every minute so your calendar always stays up to date.
+    Don't wait up to 12 hours for Google Calendar to sync your external calendars.
+    We'll do it every minute so your calendars always stay current.
   </p>
 
   <form method="post" asp-controller="Manage" asp-action="Url">
@@ -16,4 +16,43 @@
            placeholder="https://example.com/calendar.ics" required pattern="https?://.+" />
     <button type="submit" class="btn btn-lg btn-success" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">Sync</button>
   </form>
+</div>
+
+<div class="row marketing">
+  <h3>Why this app exists</h3>
+  <p>
+    Google Calendar lets you synchronize external (<a href="https://tools.ietf.org/html/rfc5545" target="_blank" rel="nofollow">iCal</a>) events to your Google Calendar by <a href="https://support.google.com/calendar/answer/37100" target="_blank" rel="nofollow">adding someone else's calendar using a link</a>.
+    The feature works great but has one major flaw:
+  </p>
+  
+  <blockquote>
+    <p>It might take up to 12 hours for changes to show in your Google Calendar.</p>
+    <footer><a href="https://support.google.com/calendar/answer/37100" target="_blank" rel="nofollow">Google Help Center</a></footer>
+  </blockquote>
+
+  <p>
+    Google Calendar doesn't synchronize changes to external calendars frequently enough for time-sensitive events.
+    You might have to wait up to 12 hours for changes to an external calendar to appear in Google Calendar.
+  </p>
+
+  <h3>What this app does</h3>
+  <p>
+    This app synchronizes external calendars more frequently than Google Calendar.
+    An event that's created, moved, or canceled in an external calendar will be reflected in Google Calendar within 1 minute.
+  </p>
+
+  <h3>How this app works</h3>
+  <p>
+    When you synchronize an external calendar, this app first creates a new calendar in Google Calendar.
+    It then reads the external calendar and your Google Calendar every minute to compare events.
+    When a difference is detected, it writes the minimal change to your Google Calendar to keep both calendars in sync.
+  </p>
+
+  <h3>This app requires full access to your Google Calendar</h3>
+  <p>
+    Be aware that this app requires calendar-level read/write access in order to create calendars and read and write events.
+    <strong>That is enough access to be dangerous.</strong>
+    This app only reads and writes calendars that it's actively synchronizing.
+    It DOES NOT read or write your existing calendars, their events, or calendars that you create.
+  </p>
 </div>
